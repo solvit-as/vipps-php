@@ -151,6 +151,10 @@ class Client
 
       return new Response(json_decode($response->getBody(), true), true);
     } catch (Exception $ex) {
+      if (!method_exists($ex, 'getResponse')) {
+        throw $ex;
+      }
+
       $response = $ex->getResponse();
       $code = $response->getStatusCode();
       $body = json_decode($response->getBody(), true);
