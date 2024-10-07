@@ -23,6 +23,10 @@ class Client
   /** @var string The current accessToken */
   private $accessToken;
 
+  static $resourceCached;
+  static $expiresOnCached;
+  static $accessTokenCached;
+
   /** @var string */
   const HTTP_METHOD_GET = 'get';
 
@@ -63,6 +67,11 @@ class Client
    */
   private function authenticate()
   {
+
+    $this->resource = $this->resource ?? self::$resourceCached;
+    $this->expiresOn = $this->expiresOn ?? self::$expiresOnCached;
+    $this->accessToken = $this->accessToken ?? self::$accessTokenCached;
+
     if (!$this->accessToken || $this->expiresOn < time()) {
       $response = $this->request(self::HTTP_METHOD_POST, '/accessToken/get', null, [
         'client_id' => Vipps::getConfig()->clientId,
@@ -249,5 +258,20 @@ class Client
         $payload,
         $headers
     );
+  }
+
+  public function getResource()
+  {
+    return $this->resource;
+  }
+
+  public function getExpiresOn()
+  {
+    return $this->expiresOn;
+  }
+
+  public function getAccessToken()
+  {
+    return $this->accessToken;
   }
 }
