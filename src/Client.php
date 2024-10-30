@@ -148,10 +148,10 @@ class Client
   private function request($method, $route = '/', $payload = null, $headers = [], $absoluteURL = false): Response
   {
     try {
-      // Re-authenicate if token expired
-      if ($this->accessToken) {
-        $this->authenticate();
-      }
+      // Re-authenicate if token expired (Do not use, may cause infinity loop)
+//      if ($this->accessToken) {
+//        $this->authenticate();
+//      }
 
       $response = $this->client->{$method}(
           $absoluteURL ? $route : $this->buildURL($route),
